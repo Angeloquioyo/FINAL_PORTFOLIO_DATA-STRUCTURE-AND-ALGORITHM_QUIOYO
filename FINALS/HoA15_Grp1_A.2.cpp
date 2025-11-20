@@ -1,0 +1,64 @@
+#include <bits/stdc++.h> 
+ 
+class Process{ 
+public: 
+    int pid; 
+    int bt; 
+}; 
+ 
+bool comparison(Process a, Process b){ 
+    return(a.bt < b.bt); 
+} 
+ 
+void findWaitingTime(Process *proc, int n, int *wt){ 
+    wt[0] = 0; 
+ 
+    for(int i = 1; i < n; i++){ 
+        wt[i] = proc[i-1].bt + wt[i-1]; 
+    } 
+} 
+ 
+void findTurnAroundTime(Process *proc, int n, int *wt, int *tat){ 
+    for(int i = 0; i < n; i++){ 
+        tat[i] = proc[i].bt + wt[i]; 
+    } 
+} 
+ 
+void findAverageTime(Process *proc, int n){ 
+    int wt[n], tat[n], total_wt = 0, total_tat = 0; 
+    findWaitingTime(proc, n, wt); 
+    findTurnAroundTime(proc, n, wt, tat); 
+ 
+    std::cout 
+    << "\nProcesses" 
+    << " Burst time "
+     << " Waiting time " 
+    << " Turn around time" 
+    << std::endl; 
+ 
+    for(int i = 0; i < n; i++){ 
+        total_wt = total_wt + wt[i]; 
+        total_tat = total_tat + tat[i]; 
+        std::cout 
+        << " " << proc[i].pid 
+        << "\t\t" << proc[i].bt 
+        << "\t " << wt[i] 
+        << "\t\t" << tat[i] 
+        << std::endl; 
+    } 
+ 
+    std::cout << std::endl; 
+ 
+    std::cout << "Average waiting time = " << (float)total_wt / (float)n << std::endl; 
+    std::cout << "Average turn around time = " << (float)total_tat / (float)n << 
+std::endl; 
+} 
+ 
+int main() { 
+    Process proc[] = {{1,21},{2,3},{3,6},{4,2}}; 
+    int n = sizeof proc / sizeof proc[0]; 
+    std::sort(proc,proc+n,comparison); 
+    findAverageTime(proc, n); 
+ 
+    return 0; 
+} 
